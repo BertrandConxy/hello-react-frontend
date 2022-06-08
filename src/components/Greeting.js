@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { loadGreetings } from '../redux/greetings';
 
 const Greeting = () => {
-  const [store, setData] = useState([]);
-  const fetchData = () => {
-    fetch('https://chello-rerails-api.herokuapp.com/api/v1/greetings')
-      .then((res) => res.json())
-      .then((store) => setData(store.data));
-  };
+  const dispatch = useDispatch();
   useEffect(() => {
-    fetchData();
+    dispatch(loadGreetings());
   }, []);
+  const greeting = useSelector((state) => state.greetings);
 
-  if (store) {
+  if (greeting.data) {
     return (
       <>
-        <h1>{store.text}</h1>
-        <button onClick={() => fetchData()} type="button">Next</button>
+        <h1>{greeting.data.text}</h1>
+        <button type="button" onClick={() => dispatch(loadGreetings())}>
+          Next message
+        </button>
       </>
     );
   }
